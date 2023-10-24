@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  frontend:
+    build: frontend/.
+    image: frontend_angular
+    container_name: frontend_angular
+    ports:
+      - "80:80"
+
