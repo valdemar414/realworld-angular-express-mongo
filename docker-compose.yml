@@ -2,9 +2,39 @@ version: "3.9"
 
 services:
   frontend:
-    build: frontend/.
+    build: ./frontend/.
     image: frontend_angular
     container_name: frontend_angular
     ports:
       - "80:80"
 
+  backend:
+    build: .
+    image: backend_express
+    container_name: backend_express
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      - "SECRET=${SECRET:?'Provide SECRET like: SECRET=asdasasd docker compose up'}"
+      - MONGODB_URI=mongodb://mongo/conduit
+    networks:
+      - conduit-network
+
+  mongo:
+    image: mongo:4
+    container_name: db_mongo
+    volumes:
+      - ./mongo-data:/data/db
+    expose:
+      - 27017
+    networks:
+      - conduit-network
+
+networks:
+  conduit-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
