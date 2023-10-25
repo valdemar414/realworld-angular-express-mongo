@@ -1,5 +1,5 @@
 # Stage 1: Build the Angular application
-FROM node:latest AS build
+FROM node:21 AS build
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN yarn install

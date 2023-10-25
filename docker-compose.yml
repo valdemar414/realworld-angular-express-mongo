@@ -7,6 +7,26 @@ services:
     container_name: frontend_angular
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    networks:
+      - conduit-network
+    depends_on:
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - conduit-network
 
   backend:
     build: .
@@ -17,10 +37,12 @@ services:
     depends_on:
       - mongo
     environment:
-      - "SECRET=${SECRET:?'Provide SECRET like: SECRET=asdasasd docker compose up'}"
+      - "SECRET=${SECRET:?'Provide SECRET like: SECRET=<your_sercret> docker compose up'}"
       - MONGODB_URI=mongodb://mongo/conduit
     networks:
-      - conduit-network
+      conduit-network:
+        aliases:
+          - backend_express
 
   mongo:
     image: mongo:4

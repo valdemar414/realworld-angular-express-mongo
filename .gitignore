@@ -36,5 +36,6 @@ node_modules
 
 .idea
 
-# mongo databade
+# db and cert data
 mongo-data/*
+data/*
