@@ -38,9 +38,7 @@ services:
       - "SECRET=${SECRET:?'Provide SECRET like: SECRET=<your_sercret> docker compose up'}"
       - MONGODB_URI=mongodb://mongo/conduit
     networks:
-      conduit-network:
-        aliases:
-          - backend_express
+      - conduit-network
 
   mongo:
     image: mongo:4
