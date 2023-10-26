@@ -29,11 +29,9 @@ services:
       - conduit-network
 
   backend:
-    build: .
+    build: ./backend/.
     image: backend_express
     container_name: backend_express
-    ports:
-      - "3000:3000"
     depends_on:
       - mongo
     environment:
